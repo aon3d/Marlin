@@ -678,7 +678,7 @@
 #define XY_PROBE_SPEED 15000
 
 // Speed for the first approach when double-probing (with PROBE_DOUBLE_TOUCH)
-#define Z_PROBE_SPEED_FAST (HOMING_FEEDRATE_Z / 2)
+#define Z_PROBE_SPEED_FAST (HOMING_FEEDRATE_Z)
 
 // Speed for the "accurate" probe of each point
 #define Z_PROBE_SPEED_SLOW Z_PROBE_SPEED_FAST
