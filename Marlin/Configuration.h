@@ -523,7 +523,7 @@
  * Override with M203
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 499, 499, 10, 30 }
+#define DEFAULT_MAX_FEEDRATE          { 499*0.8, 499*0.8, 10, 30 } //slow XY max to 80%
 
 /**
  * Default Max Acceleration (change/s) change = mm/s
@@ -553,8 +553,8 @@
  * When changing speed and direction, if the difference is less than the
  * value set here, it may happen instantaneously.
  */
-#define DEFAULT_XJERK                 15.0
-#define DEFAULT_YJERK                 15.0
+#define DEFAULT_XJERK                 15.0/2 //half jerks
+#define DEFAULT_YJERK                 15.0/2
 #define DEFAULT_ZJERK                  0.4/2
 #define DEFAULT_EJERK                  5.0
 
@@ -1712,3 +1712,4 @@
 #endif
 
 #endif // CONFIGURATION_H
+
