@@ -96,6 +96,13 @@ void GcodeSuite::G92() {
       SERIAL_ECHOLNPAIR("secondaryZTO: ", secondaryZTO);
   }
 
+  if (parser.seenval('R')){
+    primaryZTO = 0;
+    secondaryZTO = 0;
+    SERIAL_ECHO_START();
+    SERIAL_PROTOCOLLNPGM("ZTO's have been reset.");
+  }
+
 
   if (didXYZ || didA)
     SYNC_PLAN_POSITION_KINEMATIC();
