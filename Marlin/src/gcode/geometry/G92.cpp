@@ -33,7 +33,8 @@
  */
 void GcodeSuite::G92() {
   bool didXYZ = false,
-       didE = parser.seenval('E');
+       didE = parser.seenval('E'),
+       didA = parser.seenval('A');
 
   if (!didE) stepper.synchronize();
 
@@ -65,7 +66,45 @@ void GcodeSuite::G92() {
       #endif
     }
   }
-  if (didXYZ)
+
+  if (parser.seenval('A')) {
+    const float curr_z = current_position[Z_AXIS];
+    const float adjust_z = parser.value_axis_units(Z_AXIS);
+
+    if(adjust_z == 0){
+      //nothing
+    }else{
+      if(adjust_z > 0){
+        do_blocking_move_to_z(curr_z + Z_ADJUST_HOP_DISTANCE + adjust_z, HOMING_FEEDRATE_Z);
+        do_blocking_move_to_z(curr_z + adjust_z, HOMING_FEEDRATE_Z);
+
+      }else{//adjust_z < 0
+        do_blocking_move_to_z(curr_z + Z_ADJUST_HOP_DISTANCE, HOMING_FEEDRATE_Z);
+        do_blocking_move_to_z(curr_z + adjust_z, HOMING_FEEDRATE_Z);
+      }
+
+      current_position[Z_AXIS] = curr_z;
+      if(activePrimaryZTO)
+        primaryZTO += adjust_z;
+      else
+        secondaryZTO += adjust_z;
+    }
+      //report
+      SERIAL_ECHO_START();
+      SERIAL_ECHOLNPAIR("adjust_z(now): ", adjust_z);
+      SERIAL_ECHOLNPAIR("primaryZTO: ", primaryZTO);
+      SERIAL_ECHOLNPAIR("secondaryZTO: ", secondaryZTO);
+  }
+
+  if (parser.seenval('R')){
+    primaryZTO = 0;
+    secondaryZTO = 0;
+    SERIAL_ECHO_START();
+    SERIAL_PROTOCOLLNPGM("ZTO's have been reset.");
+  }
+
+
+  if (didXYZ || didA)
     SYNC_PLAN_POSITION_KINEMATIC();
   else if (didE)
     sync_plan_position_e();

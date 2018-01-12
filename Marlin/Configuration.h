@@ -324,10 +324,10 @@
 // You should use MINTEMP for thermistor short/failure protection.
 #define HEATER_0_MAXTEMP 500
 #define HEATER_1_MAXTEMP 500
-#define HEATER_2_MAXTEMP 150
+#define HEATER_2_MAXTEMP 200
 #define HEATER_3_MAXTEMP 275
 #define HEATER_4_MAXTEMP 275
-#define BED_MAXTEMP 210
+#define BED_MAXTEMP 300
 
 //===========================================================================
 //============================= PID Settings ================================
@@ -343,7 +343,7 @@
   //#define PID_DEBUG // Sends debug data to the serial port.
   //#define PID_OPENLOOP 1 // Puts PID in open loop. M104/M140 sets the output power from 0 to PID_MAX
   //#define SLOW_PWM_HEATERS // PWM with very low frequency (roughly 0.125Hz=8s) and minimum state time of approximately 1s useful for heaters driven by a relay
-  //#define PID_PARAMS_PER_HOTEND // Uses separate PID parameters for each extruder (useful for mismatched extruders)
+  #define PID_PARAMS_PER_HOTEND // Uses separate PID parameters for each extruder (useful for mismatched extruders) turned on by AH on dec 6th 2017
                                   // Set/get with gcode: M301 E[extruder number, 0-2]
   #define PID_FUNCTIONAL_RANGE 10 // If the temperature difference between the target temperature and the actual temperature
                                   // is more than PID_FUNCTIONAL_RANGE then the PID will be shut off and the heater will be set to min/max.
@@ -371,7 +371,7 @@
 // If your configuration is significantly different than this and you don't understand the issues involved, you probably
 // shouldn't use bed PID until someone else verifies your hardware works.
 // If this is enabled, find your own PID constants below.
-//#define PIDTEMPBED
+#define PIDTEMPBED
 
 //#define BED_LIMIT_SWITCHING
 
@@ -431,7 +431,7 @@
  */
 
 #define THERMAL_PROTECTION_HOTENDS // Enable thermal protection for all extruders
-#define THERMAL_PROTECTION_BED     // Enable thermal protection for the heated bed
+//#define THERMAL_PROTECTION_BED     // Enable thermal protection for the heated bed
 
 //===========================================================================
 //============================= Mechanical Settings =========================
@@ -523,7 +523,7 @@
  * Override with M203
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 499, 499, 10, 30 }
+#define DEFAULT_MAX_FEEDRATE          { 499*0.8, 499*0.8, 10*0.8, 30 } //slow XYZ max to 80%
 
 /**
  * Default Max Acceleration (change/s) change = mm/s
@@ -553,9 +553,9 @@
  * When changing speed and direction, if the difference is less than the
  * value set here, it may happen instantaneously.
  */
-#define DEFAULT_XJERK                 15.0
-#define DEFAULT_YJERK                 15.0
-#define DEFAULT_ZJERK                  0.4
+#define DEFAULT_XJERK                 15.0/2 //half jerks
+#define DEFAULT_YJERK                 15.0/2
+#define DEFAULT_ZJERK                  0.4/2
 #define DEFAULT_EJERK                  5.0
 
 //===========================================================================
@@ -675,16 +675,16 @@
 #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
 
 // X and Y axis travel speed (mm/m) between probes
-#define XY_PROBE_SPEED 20000
+#define XY_PROBE_SPEED 18000
 
 // Speed for the first approach when double-probing (with PROBE_DOUBLE_TOUCH)
-#define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
+#define Z_PROBE_SPEED_FAST (HOMING_FEEDRATE_Z)
 
 // Speed for the "accurate" probe of each point
-#define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 2)
+#define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST)
 
 // Use double touch for probing
-#define PROBE_DOUBLE_TOUCH
+//#define PROBE_DOUBLE_TOUCH
 
 /**
  * Z probes require clearance when deploying, stowing, and moving between
@@ -700,8 +700,8 @@
  * Example: `M851 Z-5` with a CLEARANCE of 4  =>  9mm from bed to nozzle.
  *     But: `M851 Z+1` with a CLEARANCE of 2  =>  2mm from bed to nozzle.
  */
-#define Z_CLEARANCE_DEPLOY_PROBE   0 // Z Clearance for Deploy/Stow
-#define Z_CLEARANCE_BETWEEN_PROBES  3 // Z Clearance between probe points
+#define Z_CLEARANCE_DEPLOY_PROBE   80 // Z Clearance for Deploy/Stow
+#define Z_CLEARANCE_BETWEEN_PROBES  8 // Z Clearance between probe points
 
 // For M851 give a range for adjusting the Z probe offset
 #define Z_PROBE_OFFSET_RANGE_MIN -5
@@ -709,6 +709,9 @@
 
 // Enable the M48 repeatability test to test probe accuracy
 #define Z_MIN_PROBE_REPEATABILITY_TEST
+
+//distance to hop when using: G92 Axx
+#define Z_ADJUST_HOP_DISTANCE 1
 
 // For Inverting Stepper Enable Pins (Active Low) use 0, Non Inverting (Active High) use 1
 // :{ 0:'Low', 1:'High' }
@@ -765,12 +768,12 @@
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 450
-#define Y_BED_SIZE 450
+#define X_BED_SIZE 540
+#define Y_BED_SIZE 495
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
-#define X_MIN_POS -90
-#define Y_MIN_POS -45
+#define X_MIN_POS 0
+#define Y_MIN_POS 0
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
 #define Y_MAX_POS Y_BED_SIZE
@@ -878,13 +881,13 @@
 #if ENABLED(AUTO_BED_LEVELING_LINEAR) || ENABLED(AUTO_BED_LEVELING_BILINEAR)
 
   // Set the number of grid points per dimension.
-  #define GRID_MAX_POINTS_X 3
+  #define GRID_MAX_POINTS_X 5
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   // Set the boundaries for probing (where the probe can reach).
-  #define LEFT_PROBE_BED_POSITION 10
-  #define RIGHT_PROBE_BED_POSITION 440
-  #define FRONT_PROBE_BED_POSITION 10
+  #define LEFT_PROBE_BED_POSITION 120
+  #define RIGHT_PROBE_BED_POSITION 500
+  #define FRONT_PROBE_BED_POSITION 55
   #define BACK_PROBE_BED_POSITION 440
 
   // The Z probe minimum outer margin (to validate G29 parameters).
@@ -998,11 +1001,11 @@
 // - Move the Z probe (or nozzle) to a defined XY point before Z Homing when homing all axes (G28).
 // - Prevent Z homing when the Z probe is outside bed area.
 //
-#define Z_SAFE_HOMING
+//#define Z_SAFE_HOMING
 
 #if ENABLED(Z_SAFE_HOMING)
-  #define Z_SAFE_HOMING_X_POINT (-20)    // X point for Z homing when homing all axis (G28).
-  #define Z_SAFE_HOMING_Y_POINT (-20)    // Y point for Z homing when homing all axis (G28).
+  #define Z_SAFE_HOMING_X_POINT (X_MIN_POS)    // X point for Z homing when homing all axis (G28).
+  #define Z_SAFE_HOMING_Y_POINT (Y_MIN_POS)    // Y point for Z homing when homing all axis (G28).
 #endif
 
 // Homing speeds (mm/m)
@@ -1712,3 +1715,4 @@
 #endif
 
 #endif // CONFIGURATION_H
+

@@ -312,6 +312,9 @@
   // This is the default power-up mode which can be later using M605.
   #define DEFAULT_DUAL_X_CARRIAGE_MODE DXC_AUTO_PARK_MODE
 
+  //enable Z Toolhead Adjust
+  #define DUAL_X_ZTO
+
   // Default settings in "Auto-park Mode"
   #define TOOLCHANGE_PARK_ZLIFT   2      // the distance to raise Z axis when parking an extruder
   #define TOOLCHANGE_UNPARK_ZLIFT 2        // the distance to raise Z axis when unparking an extruder
