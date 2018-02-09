@@ -551,9 +551,9 @@
     #define Y_MAX_FEEDRATE_SCALAR 1.0
     #define Z_MAX_FEEDRATE_SCALAR 1.0
     #define E_MAX_FEEDRATE_SCALAR 1.0
-    #define DEFAULT_MAX_FEEDRATE          { 499*X_MAX_FEEDRATE_SCALAR, 499*Y_MAX_FEEDRATE_SCALAR, 15*Z_MAX_FEEDRATE_SCALAR, 30*E_MAX_FEEDRATE_SCALAR } 
+    #define DEFAULT_MAX_FEEDRATE          { 499*X_MAX_FEEDRATE_SCALAR, 499*Y_MAX_FEEDRATE_SCALAR, 15*Z_MAX_FEEDRATE_SCALAR, 30*E_MAX_FEEDRATE_SCALAR }
 #else
-  #define DEFAULT_MAX_FEEDRATE          { 499, 499, 15, 30 } 
+  #define DEFAULT_MAX_FEEDRATE          { 499, 499, 15, 30 }
 #endif
 
 
@@ -570,7 +570,7 @@
     #define E_MAX_ACCELERATION_SCALAR 1.0
     #define DEFAULT_MAX_ACCELERATION      { 3000*X_MAX_ACCELERATION_SCALAR, 3000*Y_MAX_ACCELERATION_SCALAR, 50*Z_MAX_ACCELERATION_SCALAR, 10000*E_MAX_ACCELERATION_SCALAR }
 #else
-  #define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 50, 10000 }
+  #define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 10000 }
 #endif
 
 /**
@@ -595,10 +595,10 @@
  */
 
 #if defined(AON_DEBUG_MODE)
-  #define DEFAULT_XJERK_SCALAR 1.0         
-  #define DEFAULT_YJERK_SCALAR 1.0                
-  #define DEFAULT_ZJERK_SCALAR 1.0                 
-  #define DEFAULT_EJERK_SCALAR 1.0              
+  #define DEFAULT_XJERK_SCALAR 1.0
+  #define DEFAULT_YJERK_SCALAR 1.0
+  #define DEFAULT_ZJERK_SCALAR 1.0
+  #define DEFAULT_EJERK_SCALAR 1.0
 
   #define DEFAULT_XJERK                 15.0 * DEFAULT_XJERK_SCALAR
   #define DEFAULT_YJERK                 15.0 * DEFAULT_YJERK_SCALAR
@@ -980,7 +980,7 @@
     // Experimental Subdivision of the grid by Catmull-Rom method.
     // Synthesizes intermediate points to produce a more detailed mesh.
     //
-    //#define ABL_BILINEAR_SUBDIVISION
+    #define ABL_BILINEAR_SUBDIVISION
     #if ENABLED(ABL_BILINEAR_SUBDIVISION)
       // Number of subdivisions between probe points
       #define BILINEAR_SUBDIVISIONS 3
