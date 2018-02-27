@@ -247,6 +247,11 @@ typedef struct SettingsDataStruct {
   float filament_change_unload_length[MAX_EXTRUDERS],   // M603 T U
         filament_change_load_length[MAX_EXTRUDERS];     // M603 T L
 
+  //
+  //Z Toolhead Offsets
+  //
+  float primaryZTOEprom, secondaryZTOEprom;
+
 } SettingsData;
 
 #pragma pack(pop)
@@ -810,6 +815,14 @@ void MarlinSettings::postprocess() {
     #endif
 
     //
+    //Z Toolhead Offsets
+    //
+    _FIELD_TEST(primaryZTOEprom);
+    EEPROM_WRITE(primaryZTO);
+    _FIELD_TEST(secondaryZTOEprom);
+    EEPROM_WRITE(secondaryZTO);
+
+    //
     // Validate CRC and Data Size
     //
     if (!eeprom_error) {
@@ -1350,6 +1363,11 @@ void MarlinSettings::postprocess() {
         for (uint8_t q = MAX_EXTRUDERS * 2; q--;) EEPROM_READ(dummy);
       #endif
 
+      _FIELD_TEST(primaryZTOEprom);
+      EEPROM_READ(primaryZTO);
+      _FIELD_TEST(secondaryZTOEprom);
+      EEPROM_READ(secondaryZTO);
+
       eeprom_error = size_error(eeprom_index - (EEPROM_OFFSET));
       if (eeprom_error) {
         SERIAL_ECHO_START_P(port);
@@ -1829,6 +1847,10 @@ void MarlinSettings::reset(
       filament_change_load_length[e] = FILAMENT_CHANGE_LOAD_LENGTH;
     }
   #endif
+
+  primaryZTO = 0.0;
+  secondaryZTO = 0.0;
+
 
   postprocess();
 
