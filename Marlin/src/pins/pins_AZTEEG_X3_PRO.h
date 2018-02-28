@@ -146,12 +146,12 @@
 //
 #define HEATER_0_PIN	   10	//T0 HE HEATER
 #define HEATER_1_PIN       9	//T1 HE HEATER
-#define HEATER_2_PIN	   4	//CHAMBER HEATER SSR
+#define HEATER_2_PIN	   17	//CHAMBER HEATER SSR
 #define HEATER_BED_PIN	   8	//BED HEATER SSR
 
-#define FAN_PIN             16	//T0 PART COOLING
-#define FAN1_PIN			17	//T1 PART COOLING
-#define FAN2_PIN			5	//CHAMBER FAN
+#define FAN_PIN             4	//T0 PART COOLING
+#define FAN1_PIN			5	//T1 PART COOLING
+#define FAN2_PIN			16	//CHAMBER FAN
 
 //Filament runout - Dyze Sentinel
 #define FIL_RUNOUT_PIN      22

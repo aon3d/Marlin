@@ -51,6 +51,9 @@ void GcodeSuite::M104() {
   if (parser.seenval('S')) {
     const int16_t temp = parser.value_celsius();
     thermalManager.setTargetHotend(temp, e);
+	//Chamber fans auto-on/off
+	if (target_extruder == 2) fanSpeeds[2] = 255;
+	if (target_extruder == 2 && temp == 0) fanSpeeds[2] = 0;
 
     #if ENABLED(DUAL_X_CARRIAGE)
       if (dual_x_carriage_mode == DXC_DUPLICATION_MODE && e == 0)
@@ -104,6 +107,9 @@ void GcodeSuite::M109() {
   if (no_wait_for_cooling || parser.seenval('R')) {
     const int16_t temp = parser.value_celsius();
     thermalManager.setTargetHotend(temp, target_extruder);
+	//Chamber fans auto-on/off
+	if (target_extruder == 2) fanSpeeds[2] = 255;
+	if (target_extruder == 2 && temp == 0) fanSpeeds[2] = 0;
 
     #if ENABLED(DUAL_X_CARRIAGE)
       if (dual_x_carriage_mode == DXC_DUPLICATION_MODE && target_extruder == 0)
