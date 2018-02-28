@@ -248,9 +248,9 @@ typedef struct SettingsDataStruct {
         filament_change_load_length[MAX_EXTRUDERS];     // M603 T L
 
   //
-  //Z Toolhead Offsets
+  //Z Toolhead Offsets, DECLARE EPROM
   //
-  float primaryZTOEprom, secondaryZTOEprom;
+  float primaryZTOFit, secondaryZTOFit;
 
 } SettingsData;
 
@@ -815,12 +815,14 @@ void MarlinSettings::postprocess() {
     #endif
 
     //
-    //Z Toolhead Offsets
+    //Z Toolhead Offsets SAVE
     //
-    _FIELD_TEST(primaryZTOEprom);
-    EEPROM_WRITE(primaryZTO);
-    _FIELD_TEST(secondaryZTOEprom);
-    EEPROM_WRITE(secondaryZTO);
+    _FIELD_TEST(primaryZTOFit);
+    primaryZTOEprom = primaryZTO;
+    EEPROM_WRITE(primaryZTOEprom);
+    _FIELD_TEST(secondaryZTOFit);
+    secondaryZTOEprom = secondaryZTO;
+    EEPROM_WRITE(secondaryZTOEprom);
 
     //
     // Validate CRC and Data Size
@@ -1363,10 +1365,14 @@ void MarlinSettings::postprocess() {
         for (uint8_t q = MAX_EXTRUDERS * 2; q--;) EEPROM_READ(dummy);
       #endif
 
-      _FIELD_TEST(primaryZTOEprom);
-      EEPROM_READ(primaryZTO);
-      _FIELD_TEST(secondaryZTOEprom);
-      EEPROM_READ(secondaryZTO);
+      //
+      //ZTO Load
+      //
+
+      _FIELD_TEST(primaryZTOFit);
+      EEPROM_READ(primaryZTOEprom);
+      _FIELD_TEST(secondaryZTOFit);
+      EEPROM_READ(secondaryZTOEprom);
 
       eeprom_error = size_error(eeprom_index - (EEPROM_OFFSET));
       if (eeprom_error) {
@@ -1848,6 +1854,9 @@ void MarlinSettings::reset(
     }
   #endif
 
+  //
+  //ZTO DEFAULT
+  //
   primaryZTO = 0.0;
   secondaryZTO = 0.0;
 
@@ -2443,6 +2452,17 @@ void MarlinSettings::reset(
         #endif // EXTRUDERS > 2
       #endif // EXTRUDERS == 1
     #endif // ADVANCED_PAUSE_FEATURE
+
+    //
+    //ZTO REPORT
+    //
+    SERIAL_ECHOLNPGM_P(port, "\nZTOs:\n");
+    SERIAL_ECHOPAIR_P(port, "PrimaryZTO: ", primaryZTO);
+    SERIAL_ECHOPAIR_P(port, "SecondaryZTO: ", secondaryZTO);
+    SERIAL_ECHOPAIR_P(port, "PrimaryZTOEprom: ", primaryZTOEprom);
+    SERIAL_ECHOPAIR_P(port, "SecondaryZTOEprom: ", secondaryZTOEprom);
+    SERIAL_ECHOLNPGM_P(port, "\n");
+
   }
 
 #endif // !DISABLE_M503

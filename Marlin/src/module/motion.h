@@ -79,7 +79,9 @@ extern uint8_t active_extruder;
 #if ENABLED(DUAL_X_CARRIAGE) && ENABLED(DUAL_X_ZTO)
   extern float primaryZTO;
   extern float secondaryZTO;
-  extern bool activePrimaryZTO;
+  extern float primaryZTOEprom;
+  extern float secondaryZTOEprom;
+  //extern bool activePrimaryZTO;
 #endif
 
 #if HOTENDS > 1
