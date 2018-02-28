@@ -93,10 +93,37 @@ void GcodeSuite::G92() {
       COPY(coordinate_system[active_coordinate_system], position_shift);
   #endif
 
-  bool didA = parser.seenval('A');
-  if (didA) {
-    const float curr_z = current_position[Z_AXIS];
-    const float adjust_z = parser.value_axis_units(Z_AXIS);
+  bool doZAdjust = false;
+  float adjust_z = 0.0;
+
+
+
+  if(parser.seenval('A')){
+    adjust_z = parser.value_axis_units(Z_AXIS);
+    doZAdjust = true;
+  }else if(parser.seenval('B')){
+    float final_z = parser.value_axis_units(Z_AXIS);
+
+
+    SERIAL_ECHO_START();
+    SERIAL_ECHOLNPAIR("final_z: ", final_z);
+    SERIAL_ECHOLNPAIR("primaryZTO: ", primaryZTO);
+    SERIAL_ECHOLNPAIR("secondaryZTO: ", secondaryZTO);
+
+
+
+    if(active_extruder == 0)
+      adjust_z = final_z - primaryZTO;
+    else
+      adjust_z = final_z - secondaryZTO;
+    doZAdjust = true;
+
+    SERIAL_ECHOLNPAIR("adjust_z: ", adjust_z);
+
+  }
+
+  if (doZAdjust) {
+    float curr_z = current_position[Z_AXIS];
 
     if(adjust_z == 0){
       //nothing
@@ -111,10 +138,12 @@ void GcodeSuite::G92() {
       }
 
       current_position[Z_AXIS] = curr_z;
-      if(activePrimaryZTO)
-        primaryZTO += adjust_z;
+
+      if(active_extruder == 0)
+          primaryZTO += adjust_z;
       else
         secondaryZTO += adjust_z;
+
     }
 
     //report
@@ -122,18 +151,47 @@ void GcodeSuite::G92() {
     SERIAL_ECHOLNPAIR("adjust_z(now): ", adjust_z);
     SERIAL_ECHOLNPAIR("primaryZTO: ", primaryZTO);
     SERIAL_ECHOLNPAIR("secondaryZTO: ", secondaryZTO);
+    SERIAL_ECHOLNPAIR("PrimaryZTOEprom: ", primaryZTOEprom);
+    SERIAL_ECHOLNPAIR("SecondaryZTOEprom: ", secondaryZTOEprom);
   }
 
-  bool didR = parser.seenval('R');
+  if(parser.seen('I')){
+    float curr_z = current_position[Z_AXIS];
+    if((active_extruder == 0) && (curr_z >= -primaryZTO) ){
+      adjust_z = primaryZTOEprom - primaryZTO;
+      if(adjust_z == 0){
+        //nothing
+      } else {
+        doZAdjust = true;
+        if(adjust_z > 0){
+          do_blocking_move_to_z(curr_z + Z_ADJUST_HOP_DISTANCE + adjust_z, HOMING_FEEDRATE_Z);
+          do_blocking_move_to_z(curr_z + adjust_z, HOMING_FEEDRATE_Z);
+
+        } else {//adjust_z < 0
+          do_blocking_move_to_z(curr_z + Z_ADJUST_HOP_DISTANCE, HOMING_FEEDRATE_Z);
+          do_blocking_move_to_z(curr_z + adjust_z, HOMING_FEEDRATE_Z);
+        }
+
+        current_position[Z_AXIS] = curr_z;
+
+        primaryZTO = primaryZTOEprom;
+        secondaryZTO = secondaryZTOEprom;
+      }
+    }else{
+      SERIAL_ECHO_START();
+      SERIAL_PROTOCOLLNPGM("Switch to T0 first, and move Z higher than primary ZTO.).\n");
+    }
+  }
+
+  bool didR = parser.seen('R');
   if (didR){
-    const float z_reset_value = parser.value_axis_units(Z_AXIS);
-    primaryZTO = z_reset_value;
-    secondaryZTO = z_reset_value;
+    primaryZTO = 0.0;
+    secondaryZTO = 0.0;
     SERIAL_ECHO_START();
-    SERIAL_ECHOLNPAIR("Z toolhead offset values reset to: ", z_reset_value);
+    SERIAL_PROTOCOLLNPGM("Z toolhead offsets reset to 0. ");
   }
 
-  if (didXYZ || didA)
+  if (didXYZ || doZAdjust)
     SYNC_PLAN_POSITION_KINEMATIC();
   else if (didE)
     sync_plan_position_e();
