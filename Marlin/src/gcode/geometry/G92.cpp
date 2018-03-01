@@ -157,7 +157,7 @@ void GcodeSuite::G92() {
 
   if(parser.seen('I')){
     float curr_z = current_position[Z_AXIS];
-    if((active_extruder == 0) && (curr_z >= -primaryZTO) ){
+    if((active_extruder == 0) && (curr_z >= -(primaryZTOEprom - primaryZTO)) ){
       adjust_z = primaryZTOEprom - primaryZTO;
       if(adjust_z == 0){
         //nothing
