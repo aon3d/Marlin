@@ -209,16 +209,6 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
       current_position[Z_AXIS] += secondaryZTO - primaryZTO;
     }
 
-    /**
-    if(activePrimaryZTO){// going primary to non primary
-      activePrimaryZTO = false;
-      current_position[Z_AXIS] += primaryZTO - secondaryZTO;
-    }else if(trick_extruder == 0){// going non primary to primary
-      activePrimaryZTO = true;
-      current_position[Z_AXIS] += secondaryZTO - primaryZTO;
-    }
-    **/
-
     // Activate the new extruder ahead of calling set_axis_is_at_home!
     active_extruder = trick_extruder;
 
