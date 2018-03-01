@@ -81,7 +81,6 @@ extern uint8_t active_extruder;
   extern float secondaryZTO;
   extern float primaryZTOEprom;
   extern float secondaryZTOEprom;
-  //extern bool activePrimaryZTO;
 #endif
 
 #if HOTENDS > 1
