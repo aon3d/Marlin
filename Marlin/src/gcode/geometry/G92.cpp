@@ -112,10 +112,12 @@ void GcodeSuite::G92() {
 
 
 
-    if(active_extruder == 0)
-      adjust_z = final_z - primaryZTO;
-    else
-      adjust_z = final_z - secondaryZTO;
+	if (active_extruder == 0) {
+		adjust_z = final_z - primaryZTO;
+	}
+	else {
+		adjust_z = final_z - secondaryZTO;
+	}
     doZAdjust = true;
 
     SERIAL_ECHOLNPAIR("adjust_z: ", adjust_z);
@@ -125,25 +127,25 @@ void GcodeSuite::G92() {
   if (doZAdjust) {
     float curr_z = current_position[Z_AXIS];
 
-    if(adjust_z == 0){
-      //nothing
-    } else {
-      if(adjust_z > 0){
-        do_blocking_move_to_z(curr_z + Z_ADJUST_HOP_DISTANCE + adjust_z, HOMING_FEEDRATE_Z);
-        do_blocking_move_to_z(curr_z + adjust_z, HOMING_FEEDRATE_Z);
+	if (adjust_z != 0) {
+		if (adjust_z > 0) {
+			do_blocking_move_to_z(curr_z + Z_ADJUST_HOP_DISTANCE + adjust_z, HOMING_FEEDRATE_Z);
+			do_blocking_move_to_z(curr_z + adjust_z, HOMING_FEEDRATE_Z);
 
-      } else {//adjust_z < 0
-        do_blocking_move_to_z(curr_z + Z_ADJUST_HOP_DISTANCE, HOMING_FEEDRATE_Z);
-        do_blocking_move_to_z(curr_z + adjust_z, HOMING_FEEDRATE_Z);
-      }
-
+		}
+		else {//adjust_z < 0
+			do_blocking_move_to_z(curr_z + Z_ADJUST_HOP_DISTANCE, HOMING_FEEDRATE_Z);
+			do_blocking_move_to_z(curr_z + adjust_z, HOMING_FEEDRATE_Z);
+		}
+	}
       current_position[Z_AXIS] = curr_z;
 
-      if(active_extruder == 0)
-          primaryZTO += adjust_z;
-      else
-        secondaryZTO += adjust_z;
-
+	  if (active_extruder == 0) {
+		  primaryZTO += adjust_z;
+	  }
+	  else {
+		  secondaryZTO += adjust_z;
+	  }
     }
 
     //report
