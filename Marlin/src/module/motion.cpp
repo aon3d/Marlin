@@ -93,7 +93,6 @@ uint8_t active_extruder = 0;
   float secondaryZTO = 0.0;
   float primaryZTOEprom = 0.0;
   float secondaryZTOEprom = 0.0;
-  //bool activePrimaryZTO = true;
 #endif
 
 // Extruder offsets
