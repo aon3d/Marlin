@@ -109,6 +109,9 @@
 #if ANY_THERMISTOR_IS(75) // Many of the generic silicon heat pads use the MGB18-104F39050L32 Thermistor
   #include "thermistor_75.h"
 #endif
+#if ANY_THERMISTOR_IS(86) // M2 Chamber Heater
+	#include "thermistor_86.h"
+#endif
 #if ANY_THERMISTOR_IS(110) // Pt100 with 1k0 pullup
   #include "thermistor_110.h"
 #endif
