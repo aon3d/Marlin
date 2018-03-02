@@ -128,24 +128,19 @@ void GcodeSuite::G92() {
     float curr_z = current_position[Z_AXIS];
 
 	if (adjust_z != 0) {
-		if (adjust_z > 0) {
-			do_blocking_move_to_z(curr_z + Z_ADJUST_HOP_DISTANCE + adjust_z, HOMING_FEEDRATE_Z);
-			do_blocking_move_to_z(curr_z + adjust_z, HOMING_FEEDRATE_Z);
+        float hop_position = max(0, adjust_z) + curr_z + Z_ADJUST_HOP_DISTANCE;
 
-		}
-		else {//adjust_z < 0
-			do_blocking_move_to_z(curr_z + Z_ADJUST_HOP_DISTANCE, HOMING_FEEDRATE_Z);
-			do_blocking_move_to_z(curr_z + adjust_z, HOMING_FEEDRATE_Z);
-		}
+        do_blocking_move_to_z(hop_position, HOMING_FEEDRATE_Z);
+        do_blocking_move_to_z(curr_z + adjust_z, HOMING_FEEDRATE_Z);
 	}
-      current_position[Z_AXIS] = curr_z;
 
-	  if (active_extruder == 0) {
-		  primaryZTO += adjust_z;
-	  }
-	  else {
-		  secondaryZTO += adjust_z;
-	  }
+    current_position[Z_AXIS] = curr_z;
+
+    if (active_extruder == 0) {
+        primaryZTO += adjust_z;
+    }
+    else {
+        secondaryZTO += adjust_z;
     }
 
     //report
@@ -159,23 +154,17 @@ void GcodeSuite::G92() {
 
   if(parser.seen('I')){
     float curr_z = current_position[Z_AXIS];
-    if((active_extruder == 0) && (curr_z >= -(primaryZTOEprom - primaryZTO)) ){
+    if(active_extruder == 0 && curr_z >= -(primaryZTOEprom - primaryZTO)){
       adjust_z = primaryZTOEprom - primaryZTO;
-      if(adjust_z == 0){
-        //nothing
-      } else {
-        doZAdjust = true;
-        if(adjust_z > 0){
-          do_blocking_move_to_z(curr_z + Z_ADJUST_HOP_DISTANCE + adjust_z, HOMING_FEEDRATE_Z);
-          do_blocking_move_to_z(curr_z + adjust_z, HOMING_FEEDRATE_Z);
 
-        } else {//adjust_z < 0
-          do_blocking_move_to_z(curr_z + Z_ADJUST_HOP_DISTANCE, HOMING_FEEDRATE_Z);
-          do_blocking_move_to_z(curr_z + adjust_z, HOMING_FEEDRATE_Z);
-        }
+      if(adjust_z != 0){
+        doZAdjust = true;
+        float hop_position = max(0, adjust_z) + curr_z + Z_ADJUST_HOP_DISTANCE;
+
+        do_blocking_move_to_z(hop_position, HOMING_FEEDRATE_Z);
+        do_blocking_move_to_z(curr_z + adjust_z, HOMING_FEEDRATE_Z);
 
         current_position[Z_AXIS] = curr_z;
-
         primaryZTO = primaryZTOEprom;
         secondaryZTO = secondaryZTOEprom;
       }
