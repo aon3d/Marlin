@@ -292,7 +292,7 @@
  *    51 : 100k thermistor - EPCOS (1k pullup)
  *    52 : 200k thermistor - ATC Semitec 204GT-2 (1k pullup)
  *    55 : 100k thermistor - ATC Semitec 104GT-2 (Used in ParCan & J-Head) (1k pullup)
- *
+ *	  86 : AON3D M2 Chamber heating thermistor
  *  1047 : Pt1000 with 4k7 pullup
  *  1010 : Pt1000 with 1k pullup (non standard)
  *   147 : Pt100 with 4k7 pullup
@@ -306,7 +306,7 @@
  */
 #define TEMP_SENSOR_0 20
 #define TEMP_SENSOR_1 20
-#define TEMP_SENSOR_2 5
+#define TEMP_SENSOR_2 86
 #define TEMP_SENSOR_3 0
 #define TEMP_SENSOR_4 0
 #define TEMP_SENSOR_BED 5
