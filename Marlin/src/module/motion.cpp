@@ -91,7 +91,8 @@ uint8_t active_extruder = 0;
 #if ENABLED(DUAL_X_CARRIAGE) && ENABLED(DUAL_X_ZTO)
   float primaryZTO = 0.0;
   float secondaryZTO = 0.0;
-  bool activePrimaryZTO = true;
+  float primaryZTOEprom = 0.0;
+  float secondaryZTOEprom = 0.0;
 #endif
 
 // Extruder offsets

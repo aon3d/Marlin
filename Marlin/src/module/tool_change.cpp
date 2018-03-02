@@ -203,11 +203,9 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
     current_position[Y_AXIS] -= hotend_offset[Y_AXIS][active_extruder] - hotend_offset[Y_AXIS][trick_extruder];
     current_position[Z_AXIS] -= hotend_offset[Z_AXIS][active_extruder] - hotend_offset[Z_AXIS][trick_extruder];
     //apply Z Toolhead Offsets
-    if(activePrimaryZTO){// going primary to non primary
-      activePrimaryZTO = false;
+    if(active_extruder == 0){// going primary to non primary
       current_position[Z_AXIS] += primaryZTO - secondaryZTO;
     }else if(trick_extruder == 0){// going non primary to primary
-      activePrimaryZTO = true;
       current_position[Z_AXIS] += secondaryZTO - primaryZTO;
     }
 

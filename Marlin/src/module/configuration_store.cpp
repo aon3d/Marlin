@@ -247,6 +247,11 @@ typedef struct SettingsDataStruct {
   float filament_change_unload_length[MAX_EXTRUDERS],   // M603 T U
         filament_change_load_length[MAX_EXTRUDERS];     // M603 T L
 
+  //
+  //Z Toolhead Offsets, DECLARE EPROM
+  //
+  float primaryZTOFit, secondaryZTOFit;
+
 } SettingsData;
 
 #pragma pack(pop)
@@ -810,6 +815,16 @@ void MarlinSettings::postprocess() {
     #endif
 
     //
+    //Z Toolhead Offsets SAVE
+    //
+    _FIELD_TEST(primaryZTOFit);
+    primaryZTOEprom = primaryZTO;
+    EEPROM_WRITE(primaryZTOEprom);
+    _FIELD_TEST(secondaryZTOFit);
+    secondaryZTOEprom = secondaryZTO;
+    EEPROM_WRITE(secondaryZTOEprom);
+
+    //
     // Validate CRC and Data Size
     //
     if (!eeprom_error) {
@@ -1350,6 +1365,15 @@ void MarlinSettings::postprocess() {
         for (uint8_t q = MAX_EXTRUDERS * 2; q--;) EEPROM_READ(dummy);
       #endif
 
+      //
+      //ZTO Load
+      //
+
+      _FIELD_TEST(primaryZTOFit);
+      EEPROM_READ(primaryZTOEprom);
+      _FIELD_TEST(secondaryZTOFit);
+      EEPROM_READ(secondaryZTOEprom);
+
       eeprom_error = size_error(eeprom_index - (EEPROM_OFFSET));
       if (eeprom_error) {
         SERIAL_ECHO_START_P(port);
@@ -1829,6 +1853,13 @@ void MarlinSettings::reset(
       filament_change_load_length[e] = FILAMENT_CHANGE_LOAD_LENGTH;
     }
   #endif
+
+  //
+  //ZTO DEFAULT
+  //
+  primaryZTO = 0.0;
+  secondaryZTO = 0.0;
+
 
   postprocess();
 
@@ -2421,6 +2452,17 @@ void MarlinSettings::reset(
         #endif // EXTRUDERS > 2
       #endif // EXTRUDERS == 1
     #endif // ADVANCED_PAUSE_FEATURE
+
+    //
+    //ZTO REPORT
+    //
+    SERIAL_ECHOLNPGM_P(port, "\nZTOs:\n");
+    SERIAL_ECHOPAIR_P(port, "PrimaryZTO: ", primaryZTO);
+    SERIAL_ECHOPAIR_P(port, "SecondaryZTO: ", secondaryZTO);
+    SERIAL_ECHOPAIR_P(port, "PrimaryZTOEprom: ", primaryZTOEprom);
+    SERIAL_ECHOPAIR_P(port, "SecondaryZTOEprom: ", secondaryZTOEprom);
+    SERIAL_ECHOLNPGM_P(port, "\n");
+
   }
 
 #endif // !DISABLE_M503

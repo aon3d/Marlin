@@ -345,7 +345,7 @@
 // You should use MINTEMP for thermistor short/failure protection.
 #define HEATER_0_MAXTEMP 550
 #define HEATER_1_MAXTEMP 550
-#define HEATER_2_MAXTEMP 200
+#define HEATER_2_MAXTEMP 150
 #define HEATER_3_MAXTEMP 275
 #define HEATER_4_MAXTEMP 275
 #define BED_MAXTEMP 250
@@ -834,7 +834,7 @@
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
 #define Y_MAX_POS Y_BED_SIZE
-#define Z_MAX_POS 550 // investigate max travel distance and confirm
+#define Z_MAX_POS 620 
 
 /**
  * Software Endstops
@@ -871,8 +871,8 @@
  */
 #define FILAMENT_RUNOUT_SENSOR
 #if ENABLED(FILAMENT_RUNOUT_SENSOR)
-  #define FIL_RUNOUT_INVERTING false // set to true to invert the logic of the sensor.
-  #define ENDSTOPPULLUP_FIL_RUNOUT // Uncomment to use internal pullup for filament runout pins if the sensor is defined.
+  #define FIL_RUNOUT_INVERTING true // set to true to invert the logic of the sensor.
+  //#define ENDSTOPPULLUP_FIL_RUNOUT // Uncomment to use internal pullup for filament runout pins if the sensor is defined.
   #define FILAMENT_RUNOUT_SCRIPT "G28 X\nM0" //Home X, Wait. M108 to continue.
 #endif
 
@@ -1076,7 +1076,7 @@
 // - Move the Z probe (or nozzle) to a defined XY point before Z Homing when homing all axes (G28).
 // - Prevent Z homing when the Z probe is outside bed area.
 //
-//#define Z_SAFE_HOMING
+#define Z_SAFE_HOMING
 
 #if ENABLED(Z_SAFE_HOMING)
   #define Z_SAFE_HOMING_X_POINT (X_MIN_POS)    // X point for Z homing when homing all axis (G28).
@@ -1085,7 +1085,7 @@
 
 // Homing speeds (mm/m)
 #define HOMING_FEEDRATE_XY (50*60)
-#define HOMING_FEEDRATE_Z  (4*60)
+#define HOMING_FEEDRATE_Z  (6*60)
 
 // @section calibrate
 
