@@ -81,7 +81,7 @@
 
 //@section Aon Debug Mode
 //turn off before shipping firmware
-#define AON_DEBUG_MODE
+//#define AON_DEBUG_MODE
 
 //
 // *** VENDORS PLEASE READ *****************************************************
