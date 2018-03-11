@@ -96,8 +96,8 @@ int16_t Temperature::current_temperature_raw[HOTENDS] = { 0 },
 #endif
 
 #if WATCH_HOTENDS
-  uint16_t Temperature::watch_target_temp[HOTENDS] = { 0 };
-  millis_t Temperature::watch_heater_next_ms[HOTENDS] = { 0 };
+  uint16_t Temperature::watch_target_temp[HOTENDS - THERMAL_PROTECTION_IGNORE_TRAILING_HOTENDS] = { 0 };
+  millis_t Temperature::watch_heater_next_ms[HOTENDS - THERMAL_PROTECTION_IGNORE_TRAILING_HOTENDS] = { 0 };
 #endif
 
 #if WATCH_THE_BED
