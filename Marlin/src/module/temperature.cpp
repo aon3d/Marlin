@@ -1394,6 +1394,19 @@ void Temperature::init() {
           break;
         }
         else if (PENDING(millis(), *timer)) break;
+
+        #if THERMAL_PROTECTION_IGNORE_TRAILING_HOTENDS
+          if(heater_index >= (HOTENDS - THERMAL_PROTECTION_IGNORE_TRAILING_HOTENDS) ){
+            SERIAL_ECHO_START();
+            SERIAL_ECHOPGM("Ignoring bad temperature for this hotend: ");
+            SERIAL_ECHOPAIR(" ;  heater_id:", heater_id);
+            SERIAL_ECHOPAIR(" ;  Timer:", *timer);
+            SERIAL_ECHOPAIR(" ;  Temperature:", current);
+            SERIAL_ECHOPAIR(" ;  Target Temp:", target);
+            break;
+          }
+        #endif
+
         *state = TRRunaway;
       case TRRunaway:
         _temp_error(heater_id, PSTR(MSG_T_THERMAL_RUNAWAY), PSTR(MSG_THERMAL_RUNAWAY));

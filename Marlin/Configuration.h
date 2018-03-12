@@ -453,6 +453,7 @@
  */
 
 #define THERMAL_PROTECTION_HOTENDS // Enable thermal protection for all extruders
+#define THERMAL_PROTECTION_IGNORE_TRAILING_HOTENDS 1 // Ignore n hotends from end(eg. with extruders 0, 1, 2 & n=1; extruder 2 will not get thermal protection)
 //#define THERMAL_PROTECTION_BED     // Enable thermal protection for the heated bed
 
 //===========================================================================
