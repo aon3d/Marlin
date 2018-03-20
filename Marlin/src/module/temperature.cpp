@@ -1394,6 +1394,13 @@ void Temperature::init() {
           break;
         }
         else if (PENDING(millis(), *timer)) break;
+
+        #if THERMAL_PROTECTION_IGNORE_TRAILING_HOTENDS
+          if(heater_index >= (HOTENDS - THERMAL_PROTECTION_IGNORE_TRAILING_HOTENDS) ){
+            break;
+          }
+        #endif
+
         *state = TRRunaway;
       case TRRunaway:
         _temp_error(heater_id, PSTR(MSG_T_THERMAL_RUNAWAY), PSTR(MSG_THERMAL_RUNAWAY));
