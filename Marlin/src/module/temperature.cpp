@@ -767,7 +767,8 @@ void Temperature::manage_heater() {
       // Make sure temperature is increasing
       if (watch_heater_next_ms[e] && ELAPSED(ms, watch_heater_next_ms[e])) { // Time to check this extruder?
         // Ignore if we are looking at the chamber, where e == 2.
-        if (degHotend(e) < watch_target_temp[e] && e != 2)                   // Failed to increase enough?
+
+        if (degHotend(e) < watch_target_temp[e] && e != IGNORE_THERMAL_PROTECTION_CHAMBER )       // Failed to increase enough?
           _temp_error(e, PSTR(MSG_T_HEATING_FAILED), PSTR(MSG_HEATING_FAILED_LCD));
         else                                                                 // Start again if the target is still far off
           start_watching_heater(e);
@@ -1395,11 +1396,9 @@ void Temperature::init() {
         }
         else if (PENDING(millis(), *timer)) break;
 
-        #if THERMAL_PROTECTION_IGNORE_TRAILING_HOTENDS
-          if(heater_index >= (HOTENDS - THERMAL_PROTECTION_IGNORE_TRAILING_HOTENDS) ){
+          if(heater_index == IGNORE_THERMAL_PROTECTION_CHAMBER ){
             break;
           }
-        #endif
 
         *state = TRRunaway;
       case TRRunaway:
