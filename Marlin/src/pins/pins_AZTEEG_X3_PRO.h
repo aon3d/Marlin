@@ -152,6 +152,7 @@
 #define FAN_PIN             4	//T0 PART COOLING
 #define FAN1_PIN			5	//T1 PART COOLING
 #define FAN2_PIN			16	//CHAMBER FAN
+#define FAN3_PIN            11  //ELECTRONICS ENCLOSURE FAN
 
 //Filament runout - Dyze Sentinel
 #define FIL_RUNOUT_PIN      22
